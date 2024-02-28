@@ -1,0 +1,8 @@
+# Directory for build
+.build
+
+# Compiled Object files
+*.o
+
+# Result files
+persons
