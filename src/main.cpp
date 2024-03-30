@@ -1,32 +1,26 @@
 #include <iostream>
+#include <soci/soci.h>
+#include <db_connection.hpp>
 #include <boost/program_options.hpp>
-#include "from_boost.hpp"
-#include "for_sql.hpp"
+#include "cli_options.hpp"
 
-namespace po = boost::program_options;
+using std::cin, std::cout, std::endl;
 
 int main(int argc, const char **argv){
-Connector *db_connector = nullptr;
-po::variables_map op_map = get_option(argc, argv); 
-
-if (op_map.count("number") > 0){
-	std::cout << "number = " << op_map["number"].as<int>() << std::endl;
-}
-
-if (op_map.count("sql-server")){
-if (op_map["sql-server"].as<std::string>() == "none") {
-}
-else{
-	    std::cout << "Type SQL server: " << op_map["sql-server"].as<std::string>() << std::endl;
-	    if (op_map.count("sql-database-name"))
-		std::cout << "Database name: " << op_map["sql-database-name"].as<std::string>() << std::endl;
-	    if (op_map.count("username"))
-		std::cout << "User name: " << op_map["username"].as<std::string>() << std::endl;
-	    if (op_map.count("password"))
-		std::cout << "Password: " << op_map["password"].as<std::string>() << std::endl;
-	db_connector = new Connector();
+	CliOptions options(argc, argv);
+	Connect conn(options.get_all_parametrs(), options.get_string_typeserver());
+    if (conn.open()){
+        cout << "Выполнено подключение к базе данных" << endl;
     }
-}
+	else{
+		cout << "Подключение к базе данных не удалось.\n" 
+			<< "Подключение выполнялось строками: "
+			<< conn.getCommandConnect() 
+            << "; "
+            << conn.getStringTypeServer()
+            << endl;
+	}
+    conn.close();
 }
 
 

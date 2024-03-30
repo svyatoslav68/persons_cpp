@@ -6,3 +6,6 @@
 
 # Result files
 persons
+
+# Git bundle files
+*.bundle
