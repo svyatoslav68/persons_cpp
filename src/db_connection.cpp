@@ -4,7 +4,10 @@
 #include <soci/soci.h>
 #include "db_connection.hpp"
 
-Connect::Connect(std::string for_server,std::string typeserver):m_typeserver(typeserver),m_connect_string(for_server),m_is_connected(0){
+namespace Db {
+
+Connect::Connect(std::string for_server,std::string typeserver)
+    :m_typeserver(typeserver),m_connect_string(for_server),m_is_connected(0){
 }
 
 Connect::Connect(std::string typeserver,std::string name_DB, std::string user, std::string password){
@@ -14,6 +17,10 @@ Connect::Connect(std::string typeserver,std::string name_DB, std::string user, s
     std::cout << "m_connect_string = " << m_connect_string << std::endl;
     m_is_connected = 0;
 }
+
+Connect::Connect(Connect &conn):m_typeserver(conn.m_typeserver),m_connect_string(conn.m_connect_string),m_is_connected(conn.m_is_connected){
+}
+
 Connect::~Connect(){
     close();
 }
@@ -44,10 +51,11 @@ bool Connect::close(){
     return true;
 }
 
-soci::session *Connect::getConnect(){
+soci::session *Connect::getSession() {
     if (m_is_connected)
         return &m_session;
     else {
         return nullptr;
     }
 }
+} // namespace Db

@@ -3,8 +3,10 @@
 #include <db_connection.hpp>
 #include <boost/program_options.hpp>
 #include "cli_options.hpp"
+#include "unit.hpp"
 
 using std::cin, std::cout, std::endl;
+using Db::Connect;
 
 int main(int argc, const char **argv){
 	CliOptions options(argc, argv);
@@ -20,6 +22,11 @@ int main(int argc, const char **argv){
             << conn.getStringTypeServer()
             << endl;
 	}
+    Unit root_unit(3, conn);
+    cout << "Unit name = " << root_unit.getName() << "\n" <<
+        "sizeof(" << root_unit.getName() << ") = " << sizeof(root_unit) << endl;
+    std::vector<int> symbols;
+    cout << root_unit.display_children(symbols) << endl;
     conn.close();
 }
 
