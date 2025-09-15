@@ -5,8 +5,15 @@ using std::string;
 
 class ListPersons{
 public:
-    ListPersons();
-    ListPersons(string SQL_query);
+    ListPersons() = delete;
+	ListPersons(std::shared_ptr<Db::Connect> conn, int id_unit);
+    //ListPersons(Db::Connect* conn, int id_unit);
+    //ListPersons(Db::Connect& conn, string SQL_query);
+	int display_list() const;
 private:
+	std::shared_ptr<Db::Connect> m_conn;
+	const int m_idUnit;
+	bool m_recursive = false;
+	std::vector<int> m_persons;
     //DB_connection;
 };
