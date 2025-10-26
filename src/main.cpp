@@ -4,6 +4,7 @@
 #include <db_connection.hpp>
 #include <boost/program_options.hpp>
 #include "list_persons.hpp"
+#include "one_data.hpp"
 #include "person.hpp"
 #include "cli_options.hpp"
 #include "unit.hpp"
@@ -29,7 +30,7 @@ int main(int argc, const char **argv){
 	if (options.getIdPerson() == -1){
 			cout << "Список л/с " << root_unit.getFullName() << ":" << std::endl;
 			ListPersons list(conn, options.getUnitId());
-			list.display_list();
+			list.display_list(options.getShowIdUnit());
 	}
 	else {
 		// cout << "Unit name = " << root_unit.getName() << "\n" <<
@@ -37,7 +38,7 @@ int main(int argc, const char **argv){
 		if (options.getIdPerson() > -1){
 			cout << "Информация о ...:\n";
 			Person person(conn, options.getIdPerson());
-			person.displayPerson();
+			person.displayPerson(options.getShowIdUnit());
 		}
 		else {
 			std::vector<int> symbols;

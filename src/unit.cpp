@@ -13,16 +13,15 @@
 #include "unit.hpp"
 
 using Db::Connect;
+using Db::DataFromBD;
 
-Unit::Unit(const int idUnit, std::shared_ptr<Connect> conn, bool showidunit):m_idUnit{idUnit},
-m_conn{conn}, m_counter_inner{0}, 
-	m_order_number{0}, m_show_idunit{showidunit}{
-    soci::session *ses = conn->getSession();
-    (*ses) << "SELECT number, name, parent, type, visualization FROM units WHERE idunit = " << idUnit, soci::into(m_number), soci::into(m_name), soci::into(m_parent),soci::into(m_type), soci::into(m_visualization);
+Unit::Unit(const int idUnit, std::shared_ptr<Connect> conn, bool showidunit):DataFromBD(conn),
+	m_idUnit{idUnit}, m_counter_inner{0}, m_order_number{0}, m_show_idunit{showidunit}{
+    (*m_ses) << "SELECT number, name, parent, type, visualization FROM units WHERE idunit = " << idUnit, soci::into(m_number), soci::into(m_name), soci::into(m_parent),soci::into(m_type), soci::into(m_visualization);
     /*, soci::into(m_type);
      , soci::into(m_visualization); */
     std::vector<int> v_children(15);
-    (*ses) << "SELECT  idUnit FROM units WHERE parent = " << idUnit << " ORDER BY number", soci::into(v_children);
+    (*m_ses) << "SELECT  idUnit FROM units WHERE parent = " << idUnit << " ORDER BY number", soci::into(v_children);
     //std::cout << "Children of " << m_idUnit;
     //std::cout << getName();
 	int counter = 0;

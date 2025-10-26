@@ -16,7 +16,9 @@
  *  - возвращать штатное расписание (то есть, в т.ч. вакансии);
  * */
 
-class Unit{
+using Db::DataFromBD;
+
+class Unit:DataFromBD {
     public:
         Unit() = delete;
         Unit(const Unit &unit) = default;
@@ -37,7 +39,7 @@ class Unit{
     private:
         const int m_idUnit;
         std::string m_type;
-        std::shared_ptr<Db::Connect> m_conn;
+        //std::shared_ptr<Db::Connect> m_conn;
         int m_counter_inner;
         int m_order_number; // Порядковый номер в иерархии при отображении дерева
 		bool m_show_idunit = false;

@@ -19,4 +19,16 @@ private:
     int m_is_connected;
     soci::session m_session;
 };
+
+class DataFromBD {
+public:
+	virtual ~DataFromBD() {}
+protected:
+	DataFromBD(std::shared_ptr<Connect> conn):m_conn(conn){
+		m_ses = conn->getSession();
+	}
+	std::shared_ptr<Db::Connect> m_conn;
+	soci::session *m_ses;
+private:
+};
 }
