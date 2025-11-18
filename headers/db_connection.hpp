@@ -23,6 +23,7 @@ private:
 class DataFromBD {
 public:
 	virtual ~DataFromBD() {}
+	soci::session *getSession() const {return m_ses;}
 protected:
 	DataFromBD(std::shared_ptr<Connect> conn):m_conn(conn){
 		m_ses = conn->getSession();

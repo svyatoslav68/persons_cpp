@@ -59,7 +59,7 @@ std::string tuple_to_string(const Sequence &seq, const std::string *fields = nul
 }
 
 template <typename TupleData>
-class One_Data : DataFromBD {
+class One_Data : public DataFromBD {
 public:
 	One_Data(std::shared_ptr<Connect> conn):DataFromBD(conn) {}
 	One_Data(std::shared_ptr<Connect> conn, const std::string &SQL, const int idrecord):DataFromBD(conn),
@@ -72,6 +72,10 @@ public:
 	One_Data(std::shared_ptr<Connect> conn, const std::string &name_table, const TupleData &contents,
 		const std::string *fields, const size_t number_fields, const bool insert_record_on_BD = true)
 				:DataFromBD(conn), m_id_record(-1),m_tuple_contents(contents) {
+	/* Конструктор создает объект заполняя m_tuple_contents параметрами конструктора. Затем 
+	 * проверяет, есть ли такая запись в базе данных. И, если нет, и insert_record_on_BD == true,
+	 * добавляет такую запись в базу данных, присваивая m_id_record значение идентификатора записи 
+	 */
 		std::ostringstream SelectSQL;
 		SelectSQL << //"SELECT " << get_commastring_from_array(fields, number_fields) << " FROM " << name_table; 
 					 get_SQL_for_idrecord(name_table, contents, fields, number_fields);
@@ -99,9 +103,11 @@ public:
 	}
 
 	One_Data(const One_Data & data) = default;
+	One_Data(One_Data && data) = default;
 	void displayContent() const {
 		std::cout << *this;
 	}
+	int getId() const {return m_id_record;}
 	void setShowID(bool with_id = true) {m_with_id = with_id;}
 	friend std::ostream & operator << (std::ostream & out, const One_Data<TupleData> & data){
 		if (data.m_with_id) {

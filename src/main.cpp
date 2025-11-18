@@ -1,9 +1,13 @@
 #include <iostream>
 #include <memory>
+#define SOCI_USE_BOOST
 #include <soci/soci.h>
 #include <db_connection.hpp>
 #include <boost/program_options.hpp>
+#include "boost/tuple/tuple.hpp"
+#include "boost/tuple/tuple_io.hpp"
 #include "list_persons.hpp"
+#include "libmenu.hpp"
 #include "one_data.hpp"
 #include "person.hpp"
 #include "cli_options.hpp"
@@ -13,6 +17,10 @@ using std::cin, std::cout, std::endl;
 using Db::Connect;
 
 int main(int argc, const char **argv){
+	using ConsoleMenu::Menu;
+	using ConsoleMenu::Item;
+	using ConsoleMenu::Pager;
+
 	CliOptions options(argc, argv);
 	std::shared_ptr<Connect> conn = std::make_shared<Connect>(options.get_all_parametrs(), options.get_string_typeserver());
     if (conn->open()){
@@ -33,18 +41,39 @@ int main(int argc, const char **argv){
 			list.display_list(options.getShowIdUnit());
 	}
 	else {
-		// cout << "Unit name = " << root_unit.getName() << "\n" <<
-		//     "sizeof(" << root_unit.getName() << ") = " << sizeof(root_unit) << endl;
 		if (options.getIdPerson() > -1){
 			cout << "Информация о ...:\n";
-			Person person(conn, options.getIdPerson());
-			person.displayPerson(options.getShowIdUnit());
-		}
-		else {
-			std::vector<int> symbols;
-			//root_unit.setShowIdUnit(options.getShowIdUnit());
-			cout << root_unit.display_children(symbols) << endl;
-		}
+			One_Data<boost::tuple<string, string, string> > person{conn, string("SELECT family, name, parent FROM persons WHERE idperson = "), options.getIdPerson()};
+			person.displayContent();
+			Menu menu_person("----------- Действия ----------");
+			Item members_item("Семья");
+			//members_item.setAction(std::bind(&Person::_getMembersFamily, std::placeholders::_1));
+			std::vector<int> vec_results(10);
+			members_item.setAction(
+					[&](std::string str){
+						//std::string result;
+						(*(person.getSession())) << "SELECT id_member from members WHERE cod_person =" << 
+										person.getId(), soci::into(vec_results);
+					}
+			);
+			Item actions_item("Карьера");
+			//actions_item.setAction(&Person::_getActions);
+			Item learn_item("Учеба");
+			//learn_item.setAction(_getLearn);
+			menu_person.addItem(members_item);
+			menu_person.addItem(actions_item);
+			menu_person.addItem(learn_item);
+			Pager person_pager(&menu_person);
+			cout << person_pager.exec(Pager::ACTION, false) << endl;
+					/*Person person(conn, options.getIdPerson());
+					person.displayPerson(options.getShowIdUnit());*/
+
+				}
+				else {
+					std::vector<int> symbols;
+					//root_unit.setShowIdUnit(options.getShowIdUnit());
+					cout << root_unit.display_children(symbols) << endl;
+				}
 	}
     conn->close();
 }

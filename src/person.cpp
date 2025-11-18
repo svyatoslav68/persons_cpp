@@ -45,22 +45,18 @@ int Person::displayPerson(bool with_id) {
 
 	m_with_id  = with_id;
 	int result = 1;
-	/*if (m_with_id) {
-		std::cout << "(" << m_idperson << "): ";
-	}
-	std::cout << m_family << " " << m_name << " " << m_parent << std::endl;
-	*/
 	std::cout << *this;
 	Menu menu_person("----------- Действия ----------");
 	Item members_item("Семья");
 	//members_item.setAction(std::bind(&Person::_getMembersFamily, std::placeholders::_1));
 	std::vector<int> vec_results(10);
-	members_item.setAction([&](std::string str){
-				std::string result;
-				(*m_ses) << "SELECT id_member from members WHERE cod_person =" << m_idperson, soci::into(vec_results);
-				//std::cout << "Result = " << vec_results[0] << ", " << vec_results[1] << ", " << vec_results[2] << std::endl;
-				}
-			);
+	members_item.setAction(
+            [&](std::string str){
+                //std::string result;
+                (*m_ses) << "SELECT id_member from members WHERE cod_person =" << 
+                                m_idperson, soci::into(vec_results);
+            }
+    );
 	Item actions_item("Карьера");
 	//actions_item.setAction(&Person::_getActions);
 	Item learn_item("Учеба");
