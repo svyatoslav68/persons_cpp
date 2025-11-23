@@ -16,9 +16,9 @@ class Item;
 
 class Menu {
 public:
-	//Menu();
-	Menu(std::string name);
-	Menu(std::string name, std::vector<std::string> &content);
+	Menu() = delete;
+	Menu(const std::string name);
+	Menu(const std::string name, std::vector<std::string> &content);
 	//Menu(std::string name, socibd::Connection &con, std::string SQL);
 	static std::stack<const Menu *> menuStack;
 	void addItem(const Item& newitem, const int after = -1);

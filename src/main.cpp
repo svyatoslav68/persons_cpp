@@ -12,6 +12,7 @@
 #include "person.hpp"
 #include "cli_options.hpp"
 #include "unit.hpp"
+#include "menu_persons.hpp"
 
 using std::cin, std::cout, std::endl;
 using Db::Connect;
@@ -43,37 +44,18 @@ int main(int argc, const char **argv){
 	else {
 		if (options.getIdPerson() > -1){
 			cout << "Информация о ...:\n";
-			One_Data<boost::tuple<string, string, string> > person{conn, string("SELECT family, name, parent FROM persons WHERE idperson = "), options.getIdPerson()};
+			One_Data<boost::tuple<string, string, string> > person{conn, 
+				string("SELECT family, name, parent FROM persons WHERE idperson = "), 
+					options.getIdPerson()};
 			person.displayContent();
-			Menu menu_person("----------- Действия ----------");
-			Item members_item("Семья");
-			//members_item.setAction(std::bind(&Person::_getMembersFamily, std::placeholders::_1));
-			std::vector<int> vec_results(10);
-			members_item.setAction(
-					[&](std::string str){
-						//std::string result;
-						(*(person.getSession())) << "SELECT id_member from members WHERE cod_person =" << 
-										person.getId(), soci::into(vec_results);
-					}
-			);
-			Item actions_item("Карьера");
-			//actions_item.setAction(&Person::_getActions);
-			Item learn_item("Учеба");
-			//learn_item.setAction(_getLearn);
-			menu_person.addItem(members_item);
-			menu_person.addItem(actions_item);
-			menu_person.addItem(learn_item);
-			Pager person_pager(&menu_person);
-			cout << person_pager.exec(Pager::ACTION, false) << endl;
-					/*Person person(conn, options.getIdPerson());
-					person.displayPerson(options.getShowIdUnit());*/
+			PrivateMenu::MenuPersons menu_persons(options.getIdPerson());
+			cout << menu_persons.exec() << endl;
 
-				}
-				else {
-					std::vector<int> symbols;
-					//root_unit.setShowIdUnit(options.getShowIdUnit());
-					cout << root_unit.display_children(symbols) << endl;
-				}
+		}
+		else {
+			std::vector<int> symbols;
+			cout << root_unit.display_children(symbols) << endl;
+		}
 	}
     conn->close();
 }

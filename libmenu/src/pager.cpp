@@ -12,7 +12,7 @@
 
 namespace ConsoleMenu {
 
-Pager::Pager(Pager::TYPE_RESULT type, const Menu *menu):m_type(type),m_displayingMenu(menu),m_numberPage(0)
+Pager::Pager(const Pager::TYPE_RESULT type, const Menu *menu):m_type(type),m_displayingMenu(menu),m_numberPage(0)
 {
 	if (m_type == Pager::LIST){
 		m_result_strings = new std::vector<std::string>;
@@ -42,10 +42,7 @@ BEGIN_SELECT:
 			continue;
 		} 
 		if (symbol==0x1b){ // <Esc> Возврат к меню-предку
-		//if (symbol == 'q'){ // <Esc> Возврат к меню-предку
-			//std::cout << "Press Esc; size of stack = " << m_displayingMenu->menuStack.size() <<"\n";
 			if (m_displayingMenu->menuStack.size() > 0){
-				//m_displayingMenu->exitMenu();
 				m_displayingMenu = m_displayingMenu->exitMenu();
 				m_numberPage = 0;
 			}
@@ -85,14 +82,7 @@ BEGIN_SELECT:
 						m_result_strings->push_back(const_it->getText());
 					}
 					else {
-						//std::string ss("Reference_proba");
-						/*std::stringstream ss;
-						ss << "Не Pager::TEXT";
-						std::cout << symbol << ": " << ss.str() << std::endl;*/
-						const_it->m_action(const_it->getText());//"From pager");//ss.str());//std::cref(ss));//"Proba");
-						//const_it->executeAction();
-						//auto action = std::bind(const_it->m_action, "From pager + " + const_it->getText());
-						//action("kjhkjh");
+						const_it->m_action(const_it->getText());
 						std::cout << "Press any alphanumeric key...\n";
 						char a;
 						std::cin >> a;
@@ -176,7 +166,7 @@ bool Pager::prev()
 	}
 }
 
-void Pager::setMenu(Menu *menu, int numberPage = 0)
+void Pager::setMenu(const Menu *menu, const int numberPage)
 {
 	m_displayingMenu = menu;
 	m_numberPage = numberPage;

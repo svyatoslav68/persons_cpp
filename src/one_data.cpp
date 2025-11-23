@@ -5,21 +5,25 @@
 #include <boost/lexical_cast.hpp>
 #include "one_data.hpp"
 
-Quoting::Quoting(std::string &res, const std::string* fields=nullptr, const int number=0):m_result(res){
+Joined::Joined(std::string &res, const std::string* fields=nullptr, const int number=0):
+	m_result(res){
 	}
 
-void Quoting::operator()(const std::string &input){
+Quoted::Quoted(std::string &res, const std::string* fields=nullptr, const int number=0):m_result(res){
+	}
+
+void Quoted::operator()(const std::string &input){
 	m_result +=  '\''+boost::lexical_cast<std::string>(input)+'\''+',';
 }
 
-void Quoting::operator()(const std::tm &input){
+void Quoted::operator()(const std::tm &input){
 	char str_date[11];
 	if (std::strftime(str_date, 20, "%F", &input) > 11)
 		std::strcpy(str_date, "Error");
 	m_result +=  '\''+boost::lexical_cast<std::string>(str_date)+'\''+',';
 }
 
-void Quoting::operator()(const int &input){
+void Quoted::operator()(const int &input){
 	m_result +=  boost::lexical_cast<std::string>(input)+',';
 }
 

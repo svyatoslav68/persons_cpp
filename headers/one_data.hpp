@@ -15,8 +15,25 @@ using Db::DataFromBD;
 //using boost::tuple_size;
 using boost::get;
 
-struct Quoting {
-	explicit Quoting(std::string &res,const std::string*, const int);	//template <typename T>
+struct Joined {
+	/* Функтор, который применяется к boost:tuple с помощью функции for_each, 
+	 * объединяя все его члены с помощью пробела */
+	explicit Joined(std::string &res, const std::string*, const int);
+	template <typename T>
+	void operator()(const T &input){
+		m_result += boost::lexical_cast<std::string>(input)+ ' ';
+	}
+private: 
+	// Этот член будет модифицироваться в операторе operator()
+	std::string & m_result;
+};
+
+struct Quoted {
+	/* Функтор, который применяется к boost:tuple с помощью функции for_each, 
+	 * и делает из него строку такую что, каждый из его членов, если это  строка
+	 * или дата заключается в одинарные кавычки, а числа в кавычки не заключаются.
+	 * При этом все члены в результирующей строке разделяются запятыми */
+	explicit Quoted(std::string &res,const std::string*, const int);	//template <typename T>
 	void operator()(const std::string &input);
 	void operator()(const std::tm &input);
 	void operator()(const int &input);
@@ -26,6 +43,11 @@ private:
 };
 
 struct Pairs_Field_Value {
+	/* Функтор, который применяется к boost:tuple с помощью функции for_each, 
+	 * и делает из него строку такую что, каждый из его членов, если это  строка
+	 * или дата заключается в одинарные кавычки, а числа в кавычки не заключаются.
+	 * При этом образуются пары, состоящие из имен полей соединенных со значениями
+	 * знаками '=', все эти пары в результирующей строке разделяются запятыми */
 	explicit Pairs_Field_Value(std::string &res, const std::string *fields, const int numberfilds);
 	void operator()(const std::string &input);
 	void operator()(const std::tm &input);
@@ -89,7 +111,7 @@ public:
 				std::ostringstream InsertSQL;
 				InsertSQL << "INSERT into " << name_table << " (" << 
 					get_commastring_from_array(fields, number_fields) << ") VALUES" <<
-					"(" << tuple_to_string<TupleData, Quoting>(contents) << ")";
+					"(" << tuple_to_string<TupleData, Quoted>(contents) << ")";
 				std::cout << "InsertSQL = " << InsertSQL.str() << std::endl;
 				get_tuple_from_SQL<boost::tuples::tuple<int> >(InsertSQL.str());
 				m_id_record = boost::get<0>(get_tuple_from_SQL<boost::tuples::tuple<int> >(SelectSQL.str()));
@@ -113,7 +135,7 @@ public:
 		if (data.m_with_id) {
 			out << "(" << data.m_id_record << ") ";
 		}
-		out << tuple_to_string<TupleData, Quoting>(data.m_tuple_contents);
+		out << tuple_to_string<TupleData, Joined>(data.m_tuple_contents);
 		out << std::endl;
 		return out;
 	};

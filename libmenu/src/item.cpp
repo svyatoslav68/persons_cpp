@@ -9,16 +9,16 @@
 
 namespace ConsoleMenu {
 
-Item::Item():m_id_data{-1},m_text_item{std::string("")}, m_subMenu{nullptr} {
+Item::Item():m_id_data{-1}, m_text_item{std::string("")}, m_subMenu{nullptr} {
 }
 
-Item::Item(const int id_data):m_id_data{id_data},m_text_item{std::string("")}, m_subMenu{nullptr} {
+Item::Item(const int id_data):m_id_data{id_data}, m_text_item{std::string("")}, m_subMenu{nullptr} {
 }
 
-Item::Item(const std::string text, const int id_data):m_id_data{id_data},m_text_item(text),m_subMenu(nullptr) {
+Item::Item(const std::string text, const int id_data):m_id_data{id_data}, m_text_item(text), m_subMenu(nullptr) {
 }
 
-Item::Item(const std::string text, const Menu *subMenu):m_id_data{-1},m_text_item(text),
+Item::Item(const std::string text, const Menu *subMenu):m_id_data{-1}, m_text_item(text),
 				m_subMenu(subMenu) {
 }
 
