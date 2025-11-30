@@ -14,7 +14,7 @@ using ConsoleMenu::Menu;
 using ConsoleMenu::Item;
 using ConsoleMenu::Pager;
  
-namespace PrivateMenu {
+namespace PersonsMenu {
 
 void MenuPersons::m_ShowMembers(std::string caption){
 }

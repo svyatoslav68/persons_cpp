@@ -4,7 +4,7 @@ using ConsoleMenu::Menu;
 using ConsoleMenu::Item;
 using ConsoleMenu::Pager;
  
-namespace PrivateMenu {
+namespace PersonsMenu {
 
 class MenuPersons {
 public:
