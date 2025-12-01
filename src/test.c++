@@ -9,6 +9,7 @@
 #include <boost/tuple/tuple.hpp>
 #include "printtuple.hpp"
 #include "one_data.hpp"
+#include "many_data.hpp"
 #include "cli_options.hpp"
 
 using std::cin, std::cout, std::endl;
@@ -55,5 +56,6 @@ int main(int argc, const char **argv){
 	One_Data<boost::tuple<string, string, string, int, tm> > person_date{conn, string("SELECT family, name, parent, current_unit, birthday FROM persons WHERE idperson = "), 6};
 	cout << "Id Record = 6; " << person_date << std::endl;
 	*/
+	Many_Data<string> data_persons = {conn, string("SELECT family FROM persons")};
 }
 

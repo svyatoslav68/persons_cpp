@@ -83,6 +83,7 @@ std::string tuple_to_string(const Sequence &seq, const std::string *fields = nul
 template <typename TupleData>
 class One_Data : public DataFromBD {
 public:
+	One_Data() = delete;
 	One_Data(std::shared_ptr<Connect> conn):DataFromBD(conn) {}
 	One_Data(std::shared_ptr<Connect> conn, const std::string &SQL, const int idrecord):DataFromBD(conn),
 	/* Конструктор заполняет член класса m_tuple_contents данными полученными из запроса 
