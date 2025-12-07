@@ -139,7 +139,7 @@ public:
 		out << tuple_to_string<TupleData, Joined>(data.m_tuple_contents);
 		out << std::endl;
 		return out;
-	};
+	}
 private:
 	int m_id_record;
 	//std::string m_Base_SQL;

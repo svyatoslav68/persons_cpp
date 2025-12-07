@@ -7,6 +7,7 @@
 #include <db_connection.hpp>
 #include <boost/program_options.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <chrono>
 #include "printtuple.hpp"
 #include "one_data.hpp"
 #include "many_data.hpp"
@@ -15,6 +16,16 @@
 using std::cin, std::cout, std::endl;
 using std::tm;
 using Db::Connect;
+
+/*
+std::ostream & operator << (std::ostream & out, const std::tm & data){
+		out << data.tm_mday << "." << data.tm_mon << "." << data.tm_year;
+		return out;
+	}
+	*/
+
+//std::ostream & operator << (std::ostream & out, const std::tm & data);
+
 
 int main(int argc, const char **argv){
 	using std::string;
@@ -30,8 +41,9 @@ int main(int argc, const char **argv){
             << "; "
             << conn->getStringTypeServer()
             << endl;
+		exit(0);
 	}
-	One_Data<boost::tuple<string, string> > person{conn, string("SELECT family, name FROM persons WHERE idperson = "), 1};
+	One_Data<boost::tuple<string, string, std::tm> > person{conn, string("SELECT family, name, birthday FROM persons WHERE idperson = "), 1};
 	person.setShowID(true);
 	std::cout << person;
 	One_Data<boost::tuple<int, int, string> > unit{conn, string("SELECT idunit, number, type FROM units WHERE idunit = "), 31};
@@ -56,6 +68,11 @@ int main(int argc, const char **argv){
 	One_Data<boost::tuple<string, string, string, int, tm> > person_date{conn, string("SELECT family, name, parent, current_unit, birthday FROM persons WHERE idperson = "), 6};
 	cout << "Id Record = 6; " << person_date << std::endl;
 	*/
-	Many_Data<string> data_persons = {conn, string("SELECT family FROM persons")};
+	Many_Data<string> family_persons = {conn, string("SELECT family FROM persons"), string()};
+	std::cout << family_persons;
+	/*
+	Many_Data<std::tm> birthday_persons = {conn, string("SELECT birthday FROM persons"), std::tm()};
+	std::cout << birthday_persons;
+	*/
 }
 
