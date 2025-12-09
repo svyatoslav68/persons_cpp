@@ -7,6 +7,7 @@
 #include <boost/lexical_cast.hpp>
 #include <soci/soci.h>
 #include <iostream>
+#include <iomanip>
 #include <array>
 #include <vector>
 #include <memory>
@@ -20,12 +21,14 @@ using boost::get;
 using std::string;
 using soci::rowset;
 
-//std::ostream & operator << (std::ostream & out, const std::tm & data);
+inline std::ostream & operator << (std::ostream & out, const std::tm & data){
+	out << std::setw(2) << std::right<< std::setfill('0') << data.tm_mday << "." 
+		<< std::setw(2) << std::right << std::setfill('0') << data.tm_mon + 1 << "." 
+		<< std::setw(4) 
+		<< 1900+data.tm_year;
+	return out;
+}
 
-std::ostream & operator << (std::ostream & out, const std::tm & data){
-		out << data.tm_mday << "." << data.tm_mon << "." << data.tm_year;
-		return out;
-	}
 
 template <typename TypeField>
 /* Шаблонный класс, предоставляющий возможность работы с результами выполнения
@@ -55,6 +58,16 @@ public:
 			m_content.push_back(*it);
 		}
 		
+	}
+	bool operator == (const Many_Data<TypeField> & data) const {
+		if (m_content.size() != data.m_content.size()){
+			std::cout << "Size not equal!!!\n";
+			return false;
+		}
+		return std::equal(m_content.begin(), m_content.end(), data.m_content.begin());
+	}
+	bool operator != (const Many_Data<TypeField> & data) const {
+		return !operator==(data);
 	}
 	friend std::ostream & operator << (std::ostream & out, const Many_Data<TypeField> & data){
 		out << "Content:\n";

@@ -24,7 +24,7 @@ std::ostream & operator << (std::ostream & out, const std::tm & data){
 	}
 	*/
 
-//std::ostream & operator << (std::ostream & out, const std::tm & data);
+//inline std::ostream & operator << (std::ostream & out, const std::tm & data);
 
 
 int main(int argc, const char **argv){
@@ -68,11 +68,15 @@ int main(int argc, const char **argv){
 	One_Data<boost::tuple<string, string, string, int, tm> > person_date{conn, string("SELECT family, name, parent, current_unit, birthday FROM persons WHERE idperson = "), 6};
 	cout << "Id Record = 6; " << person_date << std::endl;
 	*/
-	Many_Data<string> family_persons = {conn, string("SELECT family FROM persons"), string()};
+	Many_Data<string> family_persons = {conn, string("SELECT family FROM persons ORDER BY family"), string()};
+	Many_Data<string> family_persons_copy(family_persons);
+	if (family_persons_copy != family_persons) {
+		std::cout << "Test for copy and equal not passed !!!\n";
+	}
+	//Many_Data<string> family_persons_too(std::move(family_persons));
 	std::cout << family_persons;
-	/*
+	std::cout << family_persons_copy;
 	Many_Data<std::tm> birthday_persons = {conn, string("SELECT birthday FROM persons"), std::tm()};
 	std::cout << birthday_persons;
-	*/
 }
 
