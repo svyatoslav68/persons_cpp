@@ -69,6 +69,7 @@ int main(int argc, const char **argv){
 	cout << "Id Record = 6; " << person_date << std::endl;
 	*/
 	Many_Data<string> family_persons = {conn, string("SELECT family FROM persons ORDER BY family"), string()};
+	//family_persons.setName("family_persons");
 	Many_Data<string> family_persons_copy(family_persons);
 	if (family_persons_copy != family_persons) {
 		std::cout << "Test for copy and equal not passed !!!\n";
