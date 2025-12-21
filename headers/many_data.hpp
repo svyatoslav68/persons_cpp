@@ -30,6 +30,10 @@ inline std::ostream & operator << (std::ostream & out, const std::tm & data){
 	return out;
 }
 
+enum class TypeDisplay {
+	DISPLAY_ROW,
+	DISPLAY_COLUMN
+};
 
 template <typename TypeField>
 /* Шаблонный класс, предоставляющий возможность работы с результами выполнения
@@ -38,8 +42,10 @@ class Many_Data : public DataFromBD {
 public:
 	Many_Data() = delete;
 	Many_Data(std::shared_ptr<Connect> conn):DataFromBD(conn) {}
-	Many_Data(std::shared_ptr<Connect> conn, string SQL_Select, const TypeField var):DataFromBD(conn) {
-		std::cout << "Constructor Many_Data(" << typeid(var).name() << ")\n";
+	Many_Data(std::shared_ptr<Connect> conn, string SQL_Select, const TypeDisplay td,
+			const TypeField var):DataFromBD(conn) {
+		//std::cout << "Constructor Many_Data(" << typeid(var).name() << ")\n";
+		m_td = td;
 		rowset<TypeField> result_query = (m_ses->prepare << SQL_Select);
 		for (auto it = result_query.begin(); it != result_query.end(); ++it){
 			m_content.push_back(*it);
@@ -87,8 +93,12 @@ public:
 		out << ":\n";
 		for (auto it = data.m_content.begin(); it != data.m_content.end(); ++it){
 			out << boost::lexical_cast<string>(*it);
-			if (it < (data.m_content.end() - 1))
-				out <<  ", ";
+			if (it < (data.m_content.end() - 1)){
+				if (data.m_td == TypeDisplay::DISPLAY_ROW)
+					out <<  ", ";
+				else
+					out << "\n";
+			}
 		}
 		//out << *it;
 		out << std::endl;
@@ -97,4 +107,5 @@ public:
 private:
 	std::vector<TypeField> m_content;
 	string m_name;
+	TypeDisplay m_td;
 };

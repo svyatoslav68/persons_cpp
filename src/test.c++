@@ -68,7 +68,7 @@ int main(int argc, const char **argv){
 	One_Data<boost::tuple<string, string, string, int, tm> > person_date{conn, string("SELECT family, name, parent, current_unit, birthday FROM persons WHERE idperson = "), 6};
 	cout << "Id Record = 6; " << person_date << std::endl;
 	*/
-	Many_Data<string> family_persons = {conn, string("SELECT family FROM persons ORDER BY family"), string()};
+	Many_Data<string> family_persons = {conn, string("SELECT family FROM persons ORDER BY family"), TypeDisplay::DISPLAY_COLUMN, string()};
 	//family_persons.setName("family_persons");
 	Many_Data<string> family_persons_copy(family_persons);
 	if (family_persons_copy != family_persons) {
@@ -77,7 +77,7 @@ int main(int argc, const char **argv){
 	//Many_Data<string> family_persons_too(std::move(family_persons));
 	std::cout << family_persons;
 	std::cout << family_persons_copy;
-	Many_Data<std::tm> birthday_persons = {conn, string("SELECT birthday FROM persons"), std::tm()};
+	Many_Data<std::tm> birthday_persons = {conn, string("SELECT birthday FROM persons"), TypeDisplay::DISPLAY_ROW,std::tm()};
 	std::cout << birthday_persons;
 }
 
