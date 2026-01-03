@@ -55,7 +55,7 @@ int main(int argc, const char **argv){
 	One_Data<boost::tuple<string, string, string, int> > person_too = {conn, string("persons"), tuple_Zhuravlev, person_fields, 4}; 
 	person_too.setShowID(true);
 	std::cout << person_too;
-	One_Data<boost::tuple<string, string, string, int> > person_zharov = {conn, string("persons"), boost::tuple<string, string, string, int>{string("Жаров"), string("Александр"), string("Владимирович"), 26}, person_fields, 4, false};//sizeof(person_fields)}; 
+	One_Data<boost::tuple<string, string, string, int> > person_zharov = {conn, string("persons"), boost::tuple<string, string, string, int>{string("Жаров"), string("Александр"), string("Владимирович"), 26}, person_fields, 4};//sizeof(person_fields)}; 
 	person_zharov.setShowID();
 	std::cout << person_zharov;
 	One_Data<boost::tuple<string, string, string, int> > person_batenkov = {conn, string("persons"), boost::tuple<string, string, string, int>{string("Батенков"), string("Кирилл"), string("Александрович"), 31}, person_fields, 4};//sizeof(person_fields)}; 

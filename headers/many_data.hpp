@@ -42,42 +42,24 @@ class Many_Data : public DataFromBD {
 public:
 	Many_Data() = delete;
 	Many_Data(std::shared_ptr<Connect> conn):DataFromBD(conn) {}
+	/* Шаблонный конструктор класса. В результате заполняется полученными значениями
+	 * вектор m_content */
 	Many_Data(std::shared_ptr<Connect> conn, string SQL_Select, const TypeDisplay td,
 			const TypeField var):DataFromBD(conn) {
-		//std::cout << "Constructor Many_Data(" << typeid(var).name() << ")\n";
 		m_td = td;
 		rowset<TypeField> result_query = (m_ses->prepare << SQL_Select);
+		int count_rows = 0;
+		for (auto it = result_query.begin(); it != result_query.end(); ++it){
+			++count_rows;
+		}
+		m_content.reserve(count_rows);
 		for (auto it = result_query.begin(); it != result_query.end(); ++it){
 			m_content.push_back(*it);
 		}
 	}
-
-	/*Many_Data(std::shared_ptr<Connect> conn, string SQL_Select, const int):DataFromBD(conn) {
-		//std::cout << "Constructor Many_Data(int)\n";
-		rowset<int> result_query = (m_ses->prepare << SQL_Select);
-		for (auto it = result_query.begin(); it != result_query.end(); ++it){
-			m_content.push_back(*it);
-		}
-	}
-	Many_Data(std::shared_ptr<Connect> conn, string SQL_Select, const string):DataFromBD(conn) {
-		//std::cout << "Constructor Many_Data(string)\n";
-		rowset<string> result_query = (m_ses->prepare << SQL_Select);
-		for (auto it = result_query.begin(); it != result_query.end(); ++it){
-			m_content.push_back(*it);
-		}
-	}
-	Many_Data(std::shared_ptr<Connect> conn, string SQL_Select, const std::tm):DataFromBD(conn) {
-		//std::cout << "Constructor Many_Data(std::tm)\n";
-		rowset<std::tm> result_query = (m_ses->prepare << SQL_Select);
-		for (auto it = result_query.begin(); it != result_query.end(); ++it){
-			m_content.push_back(*it);
-		}
-	}*/
-
 	void setName(string name) {m_name = name;}
 	bool operator == (const Many_Data<TypeField> & data) const {
 		if (m_content.size() != data.m_content.size()){
-			//std::cout << "Size not equal!!!\n";
 			return false;
 		}
 		return (m_name == data.m_name) && 
