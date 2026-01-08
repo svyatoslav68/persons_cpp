@@ -12,7 +12,7 @@ CliOptions::CliOptions(const int argc, const char *argv[], std::string name_file
     po::options_description op_all("Allowed options");
     po::options_description op_common("Learn options of command line");	
     po::options_description op_db_server("Options of Database server");
-	po::options_description op_orders("Options for orders");
+	po::options_description op_list_futures("Options for display futures of person");
     po::options_description op_units_options("Options for units");
 	po::options_description op_persons_options("Options for person");
     po::options_description op_backend("Options for develop");
@@ -27,8 +27,9 @@ CliOptions::CliOptions(const int argc, const char *argv[], std::string name_file
 		("user,U", po::value<std::string>(&m_username), "username")
 		("password,W", po::value<std::string>(&m_password), "password")
     ;
-	op_orders.add_options()
+	op_list_futures.add_options()
 		("orders", "list orders")
+		("members", "list members")
     ;
     op_units_options.add_options()
         ("unitid,u", po::value<int>(&m_id_unit), "id units")
@@ -39,9 +40,9 @@ CliOptions::CliOptions(const int argc, const char *argv[], std::string name_file
 		("personid,p", po::value<int>()->implicit_value(-1),
 													"id_person")
 	;
-    op_all.add(op_common).add(op_db_server).add(op_orders).add(op_backend).add(op_units_options).add(op_persons_options);
+    op_all.add(op_common).add(op_db_server).add(op_list_futures).add(op_backend).add(op_units_options).add(op_persons_options);
     po::options_description op_visible("Allowed options");
-    op_visible.add(op_common).add(op_db_server).add(op_orders).add(op_units_options).add(op_persons_options);
+    op_visible.add(op_common).add(op_db_server).add(op_list_futures).add(op_units_options).add(op_persons_options);
 	po::positional_options_description pos_desc;
 	pos_desc.add("dbname", 1);
 	po::command_line_parser parser{argc, argv};
@@ -90,6 +91,9 @@ CliOptions::CliOptions(const int argc, const char *argv[], std::string name_file
 	}
 	if (m_vm.count("orders")){
 		m_list_orders = true;
+	}
+	if (m_vm.count("members")){
+		m_list_members = true;
 	}
     if (!m_vm["sql-server"].empty()){
         std::string input_value = m_vm["sql-server"].as<std::string>();

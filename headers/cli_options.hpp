@@ -14,6 +14,7 @@ public:
     int getUnitId() const;
 	bool getShowIdUnit() const;
 	bool getOrderOption() const {return m_list_orders;}
+	bool getMemberOption() const {return m_list_members;}
 	int getIdPerson() const {return m_id_person;}
 
 private:
@@ -28,5 +29,6 @@ private:
 	bool m_show_idunit = false;
 	bool m_list_persons =false;
 	bool m_list_orders = false;
+	bool m_list_members = false;
 	int m_id_person = -1;
 };

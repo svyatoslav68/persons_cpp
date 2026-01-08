@@ -14,7 +14,7 @@ Connect::Connect(std::string typeserver,std::string name_DB, std::string user, s
     std::stringstream ss;
    ss << "dbname=" << name_DB << " user=" << user << " password=" << password;
    m_connect_string = ss.str();
-    std::cout << "m_connect_string = " << m_connect_string << std::endl;
+    std::cout << "Before connect. ------\nm_connect_string: " << m_connect_string << "\n ----------" << std::endl;
     m_is_connected = 0;
 }
 
@@ -29,10 +29,10 @@ bool Connect::open() {
     if (!m_is_connected){
         try {
             soci::indicator ind;
-            std::cout << "m_connect_string = " << m_connect_string << std::endl;
+            std::cout << "m_connect_string: " << m_connect_string << std::endl;
             m_session.open(m_typeserver, m_connect_string);
             m_session << "SELECT 1", soci::into(m_is_connected, ind);
-            std::cout << "ind = " << ind << "; m_is_connected = " 
+            std::cout << "Connect is open and right.\n" << "ind = " << ind << "; m_is_connected = " 
                 << m_is_connected << "."  << std::endl;
             return true;
         }

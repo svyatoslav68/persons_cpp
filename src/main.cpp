@@ -44,21 +44,36 @@ int main(int argc, const char **argv){
 	else {
 		if (options.getIdPerson() > -1){
 			cout << "Информация о ...:\n";
-			if (options.getOrderOption()) {
-				cout << "Карьера:\n";
-			}
-			else {
 			One_Data<boost::tuple<string, string, string> > person{conn, 
 				string("SELECT family, name, parent FROM persons WHERE idperson = "), 
 					options.getIdPerson()};
 			person.displayContent();
 			PersonsMenu::MenuPersons menu_persons(options.getIdPerson());
-			cout << menu_persons.exec() << endl;
+			if (options.getOrderOption()) {
+				cout << "Карьера:\n";
+			}
+			else {
+				if (options.getMemberOption()){
+						cout << "Члены семьи:\n";
+				}
+				else {
+					cout << menu_persons.exec() << endl;
+				}
 			}
 		}
 		else {
-			std::vector<int> symbols;
-			cout << root_unit.display_children(symbols) << endl;
+			if (options.getOrderOption()) {
+				cout << "Приказы по л/с:\n";
+			}
+			else {
+				if (options.getMemberOption()){
+						cout << "Члены семьи сотрудников:\n";
+				   }
+				else {
+					std::vector<int> symbols;
+					cout << root_unit.display_children(symbols) << endl;
+				}
+			}
 		}
 	}
     conn->close();

@@ -46,6 +46,10 @@ public:
 	 * вектор m_content */
 	Many_Data(std::shared_ptr<Connect> conn, string SQL_Select, const TypeDisplay td,
 			const TypeField var):DataFromBD(conn) {
+		/*
+		std::cout << "Conn = " << conn <<std::endl;
+		std::cout << SQL_Select <<std::endl;
+		*/
 		m_td = td;
 		rowset<TypeField> result_query = (m_ses->prepare << SQL_Select);
 		int count_rows = 0;
@@ -53,7 +57,9 @@ public:
 			++count_rows;
 		}
 		m_content.reserve(count_rows);
+		result_query = (m_ses->prepare << SQL_Select);
 		for (auto it = result_query.begin(); it != result_query.end(); ++it){
+			//std::cout << *it << std::endl;
 			m_content.push_back(*it);
 		}
 	}

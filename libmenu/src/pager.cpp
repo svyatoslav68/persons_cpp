@@ -41,6 +41,10 @@ BEGIN_SELECT:
 			prev();
 			continue;
 		} 
+		if (symbol == 'c'){ // Стирание экрана и перерисовывание текущего меню
+			clearscr();
+			continue;
+		}
 		if (symbol==0x1b){ // <Esc> Возврат к меню-предку
 			if (m_displayingMenu->menuStack.size() > 0){
 				m_displayingMenu = m_displayingMenu->exitMenu();
