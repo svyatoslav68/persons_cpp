@@ -30,6 +30,8 @@ inline std::ostream & operator << (std::ostream & out, const std::tm & data){
 	return out;
 }
 
+namespace classes_bd{
+
 enum class TypeDisplay {
 	DISPLAY_ROW,
 	DISPLAY_COLUMN
@@ -97,3 +99,5 @@ private:
 	string m_name;
 	TypeDisplay m_td;
 };
+
+} //namespace classes_bd

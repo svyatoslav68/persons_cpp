@@ -1,5 +1,10 @@
-# Directory for build
+# Directories for build
 .build
+.build-msvs
+.vscode
+
+# Temporary files
+*.backup
 
 # Compiled Object files
 *.o

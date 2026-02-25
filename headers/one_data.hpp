@@ -15,10 +15,12 @@ using Db::DataFromBD;
 //using boost::tuple_size;
 using boost::get;
 
+namespace classes_bd{
+
 struct Joined {
 	/* Функтор, который применяется к boost:tuple с помощью функции for_each, 
 	 * объединяя все его члены с помощью пробела */
-	explicit Joined(std::string &res, const std::string*, const int);
+	explicit Joined(std::string &res, const std::string*);//, const int);
 	template <typename T>
 	void operator()(const T &input){
 		m_result += boost::lexical_cast<std::string>(input)+ ' ';
@@ -33,7 +35,7 @@ struct Quoted {
 	 * и делает из него строку такую что, каждый из его членов, если это  строка
 	 * или дата заключается в одинарные кавычки, а числа в кавычки не заключаются.
 	 * При этом все члены в результирующей строке разделяются запятыми */
-	explicit Quoted(std::string &res,const std::string*, const int);	//template <typename T>
+	explicit Quoted(std::string &res,const std::string*);//, const int);	//template <typename T>
 	void operator()(const std::string &input);
 	void operator()(const std::tm &input);
 	void operator()(const int &input);
@@ -48,14 +50,14 @@ struct Pairs_Field_Value {
 	 * или дата заключается в одинарные кавычки, а числа в кавычки не заключаются.
 	 * При этом образуются пары, состоящие из имен полей соединенных со значениями
 	 * знаками '=', все эти пары в результирующей строке разделяются запятыми */
-	explicit Pairs_Field_Value(std::string &res, const std::string *fields, const int numberfilds);
+	explicit Pairs_Field_Value(std::string &res, const std::string *fields);//, const int numberfilds);
 	void operator()(const std::string &input);
 	void operator()(const std::tm &input);
 	void operator()(const int &input);
 private:
 	std::string & m_result;
 	const std::string *m_fields;
-	const int m_numberfields;
+	//const int m_numberfields;
 	int m_current_field;
 };
 
@@ -69,14 +71,19 @@ std::string quote<std::string>(std::string &input) {
 	return '\"' + input + '\"';
 }*/
 
-template <typename Sequence, typename Functor>
-std::string tuple_to_string(const Sequence &seq, const std::string *fields = nullptr, const int numberfilds = 0){
+template <typename TTuple, typename Functor>
+static std::string tuple_to_string(
+        const TTuple &tuple_data, const std::string *fields = nullptr, const int numberfilds = 0){
 	std::string result, tmp_result;
-	Functor functor(tmp_result, fields, numberfilds);
-	boost::fusion::for_each(seq, functor); 
+    // Здесь мы создаем строку, ссылку на которую передаем в конструктор функтора.
+	Functor functor(tmp_result, fields);//, numberfilds);
+	boost::fusion::for_each(tuple_data, functor); 
+    // Выполняем функтор над каждым членом кортежа, содержащего результат SQL-запроса
+    // Результат работы функции for_each окажется в строке переданной в функтор по ссылке
 	result = tmp_result.substr(0, tmp_result.rfind(','));
 	tmp_result = std::move(result);
 	result = tmp_result.substr(0, tmp_result.rfind(" AND "));
+    // Подчищаем созданную строку и возвращаем её из функции.
 	return result;
 }
 
@@ -203,3 +210,4 @@ private:
 	}
 };
 
+} //namespace classes_bd
