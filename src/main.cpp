@@ -35,11 +35,11 @@ int main(int argc, const char **argv){
             << conn->getStringTypeServer()
             << endl;
 	}
-	Unit root_unit(options.getUnitId(), conn, options.getShowIdUnit());
+	Unit root_unit(options.getId(), conn, options.getShowId());
 	if (options.getIdPerson() == -1){
 			cout << "Список л/с " << root_unit.getFullName() << ":" << std::endl;
-			ListPersons list(conn, options.getUnitId());
-			list.display_list(options.getShowIdUnit());
+			ListPersons list(conn, options.getId());
+			list.display_list(options.getShowId());
 	}
 	else {
 		if (options.getIdPerson() > -1){

@@ -3,6 +3,11 @@
 namespace po = boost::program_options;
 class CliOptions {
 enum TypeServer {PostgreSQL, MySQL, Oracle, DB2};
+enum TypeID {IDPerson, //Идентификатор сотрудника
+             IDUnit, // Идентификатор подразделения
+             IDMember, // Идентификатор члена семьи
+             IDOrder, // Идентификатор приказа
+    };
 public:
     CliOptions() = delete;
     CliOptions(std::string name_file_settings);
@@ -11,8 +16,8 @@ public:
 	po::variables_map get_variables_map () {return m_vm;}
 	std::string get_all_parametrs() const;
     std::string get_string_typeserver() const;
-    int getUnitId() const;
-	bool getShowIdUnit() const;
+    int getId() const;
+	bool getShowId() const;
 	bool getOrderOption() const {return m_list_orders;}
 	bool getMemberOption() const {return m_list_members;}
 	int getIdPerson() const {return m_id_person;}
@@ -25,8 +30,9 @@ private:
 	std::string m_hostname;
 	std::string m_username;
 	std::string m_password;
-    int m_id_unit;
-	bool m_show_idunit = false;
+    int m_id_record;
+    TypeID m_whose_id; // Чей идентификатор m_id_record
+	bool m_show_id = false;
 	bool m_list_persons =false;
 	bool m_list_orders = false;
 	bool m_list_members = false;

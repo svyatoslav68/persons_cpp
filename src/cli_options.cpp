@@ -10,8 +10,9 @@ CliOptions::CliOptions(std::string name_file_settings):m_name_file_settings(name
 
 CliOptions::CliOptions(const int argc, const char *argv[], std::string name_file_settings):m_name_file_settings(name_file_settings),m_typeserver(CliOptions::PostgreSQL){
     po::options_description op_all("Allowed options");
-    po::options_description op_common("Learn options of command line");	
+    po::options_description op_common("Common options of command line");	
     po::options_description op_db_server("Options of Database server");
+    po::options_description op_ids("Differents identificators");
 	po::options_description op_list_futures("Options for display futures of person");
     po::options_description op_units_options("Options for units");
 	po::options_description op_persons_options("Options for person");
@@ -19,6 +20,7 @@ CliOptions::CliOptions(const int argc, const char *argv[], std::string name_file
 	op_common.add_options()
 		("help,h", "show this message")
         ("version,v", "version of application")
+		("show-id", "show id record")
     ;
     op_db_server.add_options()
         ("sql-server", po::value<std::string>(), "type sql-server (Postgres or MySQL)")
@@ -31,14 +33,15 @@ CliOptions::CliOptions(const int argc, const char *argv[], std::string name_file
 		("orders", "list orders")
 		("members", "list members")
     ;
+    op_ids.add_options()
+        ("unitid,u", po::value<int>(&m_id_record), "id unit")
+		("personid,p", po::value<int>()->implicit_value(-1), "id_person")
+        ("orderid", po::value<int>(&m_id_record), "id order")
+    ;
     op_units_options.add_options()
-        ("unitid,u", po::value<int>(&m_id_unit), "id units")
-		("showidunit", "show idunit")
     ;
 	op_persons_options.add_options()
 		("list-persons,l", "list of persons for unit")
-		("personid,p", po::value<int>()->implicit_value(-1),
-													"id_person")
 	;
     op_all.add(op_common).add(op_db_server).add(op_list_futures).add(op_backend).add(op_units_options).add(op_persons_options);
     po::options_description op_visible("Allowed options");
@@ -77,14 +80,14 @@ CliOptions::CliOptions(const int argc, const char *argv[], std::string name_file
     }
 	*/
 	if(!m_vm["personid"].empty()){
-		m_id_person = m_vm["personid"].as<int>();
+		m_id_record = m_vm["personid"].as<int>();
 	}
 	else {
-		m_id_person = -2;
+		m_id_record = -2;
 	}
 	
-	if (m_vm.count("showidunit")){
-		m_show_idunit = true;
+	if (m_vm.count("show-id")){
+		m_show_id = true;
 	}
 	if (m_vm.count("list-persons")){
 		m_list_persons = true;
@@ -139,10 +142,10 @@ std::string CliOptions::get_string_typeserver() const {
     }
 }
 
-int CliOptions::getUnitId() const{
-    return m_id_unit;
+int CliOptions::getId() const{
+    return m_id_record;
 }
 
-bool CliOptions::getShowIdUnit() const {
-	return m_show_idunit;
+bool CliOptions::getShowId() const {
+	return m_show_id;
 }
