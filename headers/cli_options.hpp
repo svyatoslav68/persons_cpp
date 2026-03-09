@@ -5,9 +5,15 @@ class CliOptions {
 enum TypeServer {PostgreSQL, MySQL, Oracle, DB2};
 enum TypeID {IDPerson, //Идентификатор сотрудника
              IDUnit, // Идентификатор подразделения
-             IDMember, // Идентификатор члена семьи
+             IDMember, // Идентификатор члена семьи 
              IDOrder, // Идентификатор приказа
     };
+enum TypeModeApplication {
+			Mode_View, 	// 	
+			Mode_Edit, 	//
+			Mode_Add,	//
+			Mode_Delete,//
+};
 public:
     CliOptions() = delete;
     CliOptions(std::string name_file_settings);

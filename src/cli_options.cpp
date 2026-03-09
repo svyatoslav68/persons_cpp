@@ -21,6 +21,7 @@ CliOptions::CliOptions(const int argc, const char *argv[], std::string name_file
 		("help,h", "show this message")
         ("version,v", "version of application")
 		("show-id", "show id record")
+		("mode,m", po::value<TypeModeApplication>(&m_mode), "set application mode")
     ;
     op_db_server.add_options()
         ("sql-server", po::value<std::string>(), "type sql-server (Postgres or MySQL)")
@@ -39,13 +40,16 @@ CliOptions::CliOptions(const int argc, const char *argv[], std::string name_file
         ("orderid", po::value<int>(&m_id_record), "id order")
     ;
     op_units_options.add_options()
+		("list-persons,l", "list of persons for unit")
+		("children,c", "list children unit")
     ;
 	op_persons_options.add_options()
-		("list-persons,l", "list of persons for unit")
 	;
-    op_all.add(op_common).add(op_db_server).add(op_list_futures).add(op_backend).add(op_units_options).add(op_persons_options);
+    op_all.add(op_common).add(op_db_server).add(op_list_futures).\
+		add(op_ids).add(op_backend).add(op_units_options).add(op_persons_options);
     po::options_description op_visible("Allowed options");
-    op_visible.add(op_common).add(op_db_server).add(op_list_futures).add(op_units_options).add(op_persons_options);
+    op_visible.add(op_common).add(op_db_server).add(op_list_futures).\
+		add(op_ids).add(op_units_options).add(op_persons_options);
 	po::positional_options_description pos_desc;
 	pos_desc.add("dbname", 1);
 	po::command_line_parser parser{argc, argv};
